@@ -17,6 +17,7 @@ const Register = () => {
         setSubmitting = true;
 
         userService.addUser(value)
+
             .then(res => console.log(res));
     }
 

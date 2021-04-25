@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 
 import Header from "./components/header";
 import Register from "./components/authentication/register";
@@ -8,6 +8,9 @@ import { UserProvider } from "./providers/userContext";
 import { ThemeProvider } from "@material-ui/core";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { blue, green, purple } from '@material-ui/core/colors';
+import Admin from './components/admin';
+import ManageUser from './components/admin/manageuser';
+import UserDashboard from './components/user';
 
 
 
@@ -22,13 +25,21 @@ function App() {
         main: green[500],
       },
     },
+    transitions: {
+      duration: {
+        shortest: 100,
+      }
+    },
   });
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <UserProvider>
-          <Header />
+
+          <Route exact path="/">
+            <Redirect to="/admin" />
+          </Route>
 
           <Route path="/register">
             <Register />
@@ -36,6 +47,18 @@ function App() {
 
           <Route path="/login">
             <Login />
+          </Route>
+
+          <Route path="/admin/manageuser">
+            <ManageUser />
+          </Route>
+
+          <Route path="/admin">
+            <Admin />
+          </Route>
+
+          <Route path="/user">
+            <UserDashboard />
           </Route>
 
         </UserProvider>

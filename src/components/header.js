@@ -1,13 +1,35 @@
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import app_config from '../config';
+import clsx from "clsx";
 
-const Header = () => {
+const Header = props => {
+
+    const open = props.open;
+    const drawerWidth = props.drawerWidth;
+    const handleDrawerOpen = props.handleDrawerOpen;
+
 
     const useStyles = makeStyles((theme) => ({
+        appBar: {
+            position: 'relative',
+            zIndex: theme.zIndex.drawer + 1,
+            transition: theme.transitions.create(['width', 'margin'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.shortest,
+            }),
+        },
+        appBarShift: {
+            marginLeft: drawerWidth,
+            width: `calc(100% - ${drawerWidth}px)`,
+            transition: theme.transitions.create(['width', 'margin'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.shortest,
+            }),
+        },
         root: {
             flexGrow: 1,
         },
@@ -26,12 +48,32 @@ const Header = () => {
 
     const classes = useStyles();
 
-    return (
-        <AppBar position="static">
-            <Toolbar>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+    const showMenuButton = () => {
+        if (props.drawer & !open) {
+            return (
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={props.handleDrawerOpen}
+                    edge="start"
+                    className={clsx(classes.menuButton, {
+                        [classes.hide]: open,
+                    })}
+                >
                     <MenuIcon />
                 </IconButton>
+            )
+        }
+    }
+
+    return (
+        <AppBar
+            position="sticky"
+            className={clsx(classes.appBar, {
+                [classes.appBarShift]: open,
+            })}>
+            <Toolbar>
+                {showMenuButton()}
                 <Typography variant="h6" className={classes.title}>
                     {app_config.projectTitle}
                 </Typography>
